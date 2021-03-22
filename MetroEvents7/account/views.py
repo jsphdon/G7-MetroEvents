@@ -11,9 +11,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
 
 # Create your views here.
-from .models import User
 from .forms import CreateUserForm
-from .decorators import unauthenticated_user, allowed_users, admin_only
+from .models import User
+from .decorators import unauthenticated_user
 
 
 @unauthenticated_user
@@ -37,10 +37,14 @@ def registerPage(request):
     return render(request, 'register.html', context)
 
 
-@unauthenticated_user
 def loginPage(request):
     if request.user.is_authenticated:
-        return redirect('account:myaccount')
+        if not request.user.is_staff:
+            return redirect('account:myaccount')
+        elif request.user.is_superuser:
+            return redirect('account:administrator')
+        else:
+            return redirect('account:myaccount')
     else:
         if request.method == 'POST':
             username = request.POST.get('username')
@@ -50,12 +54,16 @@ def loginPage(request):
 
             if user is not None:
                 login(request, user)
-                return redirect('account:myaccount')
+                if not user.is_staff:
+                    return redirect('account:myaccount')
+                elif user.is_superuser:
+                    return redirect('account:administrator')
+                else:
+                    return HttpResponse("ERROR")
             else:
                 messages.info(request, 'Username OR password is incorrect')
 
-        context = {}
-        return render(request, 'login.html', context)
+        return render(request, 'login.html')
 
 
 def logoutUser(request):
@@ -64,12 +72,17 @@ def logoutUser(request):
 
 
 @login_required(login_url='login')
-@admin_only
 def adminPage(request):
     if request.method == 'GET':
         context = {}
         return render(request, 'adminAccount.html', context)
 
+
+# @login_required(login_url='login')
+# def organizerPage(request):
+#     if request.method == 'GET':
+#         context = {}
+#         return render(request, 'organizerAccount.html', context)
 
 @login_required(login_url='login')
 def homePage(request):
