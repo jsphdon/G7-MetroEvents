@@ -90,6 +90,12 @@
     margin: 2px auto;
     z-index: 1100 !important;
   }
+
+  .usertxt {
+    position: relative;
+    top: 50px;
+    text-align: center;
+  }
 </style>
 
 <body>
@@ -110,7 +116,9 @@
     <span><a class="hello-msg" href="{% url 'account:logout' %}" style="color: white;">Logout</a></span>
 
   </nav>
-
+  <div class="usertxt">
+    <h2>User Dashboard</h2>
+  </div>
   <!-- Table Events-->
 
   <div class="container-fluid">
@@ -122,30 +130,29 @@
           <table class="table table-bordered">
             <thead>
               <tr>
-                <th scope="col">ID</th>
-                <th scope="col">Event</th>
-                <th scope="col">Organizer</th>
-                <th scope="col">Actions</th>
+                <th id="event-col1" style="text-align: center">ID</th>
+                <th id="event-col2" style="text-align: center">Event Type</th>
+                <th id="event-col3" style="text-align: center">Organizer</th>
+                <th id="event-col4" style="text-align: center">Actions</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <th scope="row">1</th>
-                <td>Basketball League</td>
-                <td>Kyle</td>
-                <td>
-                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-view">View
-                    Event</button>
-                  <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modal-join">Join
-                    Event</button>
-                  <!-- <button type="button" class="btn btn-danger"><i class="far fa-trash-alt"></i></button> -->
+                <td style="text-align: center"></td>
+                <td style="text-align: center"></td>
+                <td style="text-align: center"></td>
+                <td style="text-align: center">
+                  <input class="btn btn-primary" type="button" id="requestorg_acceptbtn" value="JOIN EVENT">
                 </td>
               </tr>
             </tbody>
           </table>
         </div>
       </div>
-      <button type="button" class="btn btn-primary">Request to be an Organizer</button>
+      <div class="btn-center">
+        <button type="button" class="btn btn-primary" id="request_orgbtn">Request to be an Organizer</button>
+      </div>
+
     </div>
 
     <!-- Table My Events-->
@@ -156,23 +163,19 @@
           <table class="table table-bordered">
             <thead>
               <tr>
-                <th scope="col">ID</th>
-                <th scope="col">Event</th>
-                <th scope="col">Organizer</th>
-                <th scope="col">Actions</th>
+                <th id="eventjoined-col1" style="text-align: center">ID</th>
+                <th id="eventjoined-col2" style="text-align: center">Event Joined</th>
+                <th id="eventjoined-col3" style="text-align: center">Organizer</th>
+                <th id="eventjoined-col4" style="text-align: center">Actions</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <th scope="row">1</th>
-                <td>First Aid Seminar</td>
-                <td>Joseph</td>
-                <td>
-                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-view">View
-                    Event</button>
-                  <button type="button" class="btn btn-success" data-toggle="modal"
-                    data-target="#modal-remove">Remove</button>
-                  <!-- <button type="button" class="btn btn-danger"><i class="far fa-trash-alt"></i></button> -->
+                <td style="text-align: center"></td>
+                <td style="text-align: center"></td>
+                <td style="text-align: center"></td>
+                <td style="text-align: center">
+                  <input class="btn btn-danger" type="button" id="remove_eventbtn" value="REMOVE EVENT">
                 </td>
               </tr>
             </tbody>

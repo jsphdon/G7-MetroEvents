@@ -17,7 +17,7 @@
 </head>
 
 <style>
-   .hello-msg {
+  .hello-msg {
     font-size: 18px;
     color: #fff;
     margin-right: 20px;
@@ -82,6 +82,7 @@
     padding: 14px 20px;
     background-color: #f44336;
   }
+
   .createbtn {
     padding: 14px 20px;
     background-color: #3CB371;
@@ -148,24 +149,23 @@
       <label for="type"><b>Event Type</b></label>
       <input id="eventType" type="text" placeholder="Enter Event Type" name="type" required>
 
-      <label for="decription"><b>Event Description</b></label>
-      <input id="eventDescription" type="text" placeholder="Enter Event Description" name="description" required>
-   
+
       <label for="decription"><b>Start Date</b></label>
       <input id="eventstartdate" type="date" name="startdate" required>
 
       <label for="decription"><b>End Date</b></label>
       <input id="eventenddate" type="date" name="enddate" required>
       <!-- <p>By creating an account you agree to our <a href="#" style="color:dodgerblue">Terms & Privacy</a>.</p> -->
-       <div class="container">
-      <div class="clearfix">
-       
-        <a style="color: white; text-align: center;" type="button" class="cancelbtn" href="{% url 'account:organizer' %}">Cancel</a>
-        <a style="color: white; text-align: center;" type="button" class="createbtn">Create</a>
-       <!--  <button type="submit" class="signupbtn">Create Event</button> -->
+      <div class="container">
+        <div class="clearfix">
 
+          <a style="color: white; text-align: center;" type="button" class="cancelbtn"
+            href="{% url 'account:organizer' %}">Cancel</a>
+          <a style="color: white; text-align: center;" type="button" class="createbtn">Create</a>
+          <!--  <button type="submit" class="signupbtn">Create Event</button> -->
+
+        </div>
       </div>
-    </div>
     </div>
   </form>
 

@@ -101,6 +101,10 @@
     position: relative;
     left: 85%;
   }
+
+  .btn-addEvent {
+    text-align: center;
+  }
 </style>
 
 <body>
@@ -129,55 +133,23 @@
   <div class="container-fluid">
     <!--    {% block content %} -->
     <div class="container">
-      <h4>Users </h4>
+      <h4>Users</h4>
       <div class="row">
         <div class="col-12">
           <table class="table table-bordered">
             <thead>
               <tr>
-                <th scope="col">ID</th>
-                <th scope="col">Event</th>
-                <th scope="col">Organizer</th>
-                <th scope="col">Actions</th>
+                <th id="usertbl-col1" style="text-align: center">ID</th>
+                <th id="usertbl-col2" style="text-align: center">Username</th>
+                <th id="usertbl-col3" style="text-align: center">Email</th>
+                <th id="usertbl-col4" style="text-align: center">Date Registered</th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <th scope="row">1</th>
-                <td>Basketball League</td>
-                <td>Kyle</td>
-                <td>
-                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-view">View
-                    Event</button>
-                  <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modal-join">Join
-                    Event</button>
-                  <!-- <button type="button" class="btn btn-danger"><i class="far fa-trash-alt"></i></button> -->
-                </td>
-              </tr>
-              <tr>
-                <th scope="row">2</th>
-                <td>Cebu Triathlon</td>
-                <td>Kyle</td>
-                <td>
-                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-view">View
-                    Event</button>
-                  <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modal-join">Join
-                    Event</button>
-                  <!-- <button type="button" class="btn btn-danger"><i class="far fa-trash-alt"></i></button> -->
-                </td>
-              </tr>
-              <tr>
-                <th scope="row">3</th>
-                <td>Year-end Party</td>
-                <td>Kyle</td>
-                <td>
-                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-view">View
-                    Event</button>
-                  <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modal-join">Join
-                    Event</button>
-                  <!-- <button type="button" class="btn btn-danger"><i class="far fa-trash-alt"></i></button> -->
-                </td>
-              </tr>
+              <td style="text-align: center">{{ account.id }}</td>
+              <td style="text-align: center">{{ account.username }}</td>
+              <td style="text-align: center">{{ account.email }}</td>
+              <td style="text-align: center">{{ account.date_registered }}</td>
             </tbody>
           </table>
         </div>
@@ -192,102 +164,58 @@
           <table class="table table-bordered">
             <thead>
               <tr>
-                <th scope="col">ID</th>
-                <th scope="col">Event</th>
-                <th scope="col">Organizer</th>
-                <th scope="col">Actions</th>
+                <th id="eventtbl-col1" style="text-align: center">ID</th>
+                <th id="eventtbl-col2" style="text-align: center">Event</th>
+                <th id="eventtbl-col3" style="text-align: center">Organizer</th>
+                <th id="eventtbl-col4" style="text-align: center">Start Date</th>
+                <th id="eventtbl-col5" style="text-align: center">End Date</th>
+                <th id="eventtbl-col5" style="text-align: center">Action</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <th scope="row">1</th>
-                <td>First Aid Seminar</td>
-                <td>Joseph</td>
-                <td>
-                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-viewevent">View
-                    Event</button>
+                <td style="text-align: center">{{ account.event_id }}</td>
+                <td style="text-align: center">{{ account.event_type }}</td>
+                <td style="text-align: center">{{ account.organizer_id }}</td>
+                <td style="text-align: center">{{ account.start_date }}</td>
+                <td style="text-align: center">{{ account.end_date }}</td>
+                <td style="text-align: center"><input class="btn btn-primary" type="button" id="cancel_eventbtn"
+                    value="CANCEL EVENT"></td>
 
-                  <!-- <button type="button" class="btn btn-danger"><i class="far fa-trash-alt"></i></button> -->
-                </td>
-              </tr>
-              <tr>
-                <th scope="row">2</th>
-                <td>Dancing Workshop</td>
-                <td>Lucelle</td>
-                <td>
-                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-viewevent">View
-                    Event</button>
-                  <!-- <button type="button" class="btn btn-danger"><i class="far fa-trash-alt"></i></button> -->
-                </td>
-              </tr>
-              <tr>
-                <th scope="row">3</th>
-                <td>Animation Tutorial</td>
-                <td>Jeanne</td>
-                <td>
-                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-viewevent">View
-                    Event</button>
-                  <!-- <button type="button" class="btn btn-danger"><i class="far fa-trash-alt"></i></button> -->
-                </td>
               </tr>
             </tbody>
 
           </table>
         </div>
       </div>
-      <button class="btn btn-primary" id="btn-adminAddEvent"> Add events</button>
+      <div class="btn-addEvent">
+        <form action="addEvent">
+          {% csrf_token %}
+          <button type="submit" class="button btn btn-primary" href="{% url 'account:addEvent' %}"> Add
+            events</button>
+        </form>
+      </div>
+
     </div>
   </div>
 
   <div class="container">
-    <h4>Organizer</h4>
+    <h4>Organizers</h4>
     <div class="row">
       <div class="col-12">
         <table class="table table-bordered">
           <thead>
             <tr>
-              <th scope="col">ID</th>
-              <th scope="col">Event</th>
-              <th scope="col">Organizer</th>
-              <th scope="col">Actions</th>
+              <th id="orgtbl-col1" style="text-align: center">ID</th>
+              <th id="orgtbl-col2" style="text-align: center">Organizer_Username</th>
+              <th id="orgtbl-col3" style="text-align: center">Date Promoted</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <th scope="row">1</th>
-              <td>First Aid Seminar</td>
-              <td>Joseph</td>
-              <td>
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-view">View
-                  Event</button>
-                <button style="background-color: red;" type="button" class="btn btn-primary" data-toggle="modal"
-                  data-target="#modal-remove">Remove</button>
-                <!-- <button type="button" class="btn btn-danger"><i class="far fa-trash-alt"></i></button> -->
-              </td>
-            </tr>
-            <tr>
-              <th scope="row">2</th>
-              <td>Dancing Workshop</td>
-              <td>Lucelle</td>
-              <td>
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-view">View
-                  Event</button>
-                <button style="background-color: red;" type="button" class="btn btn-primary" data-toggle="modal"
-                  data-target="#modal-remove">Remove</button>
-                <!-- <button type="button" class="btn btn-danger"><i class="far fa-trash-alt"></i></button> -->
-              </td>
-            </tr>
-            <tr>
-              <th scope="row">3</th>
-              <td>Animation Tutorial</td>
-              <td>Jeanne</td>
-              <td>
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-view">View
-                  Event</button>
-                <button style="background-color: red;" type="button" class="btn btn-primary" data-toggle="modal"
-                  data-target="#modal-remove">Remove</button>
-                <!-- <button type="button" class="btn btn-danger"><i class="far fa-trash-alt"></i></button> -->
-              </td>
+              <td style="text-align: center">{{ account.organizer_id }}</td>
+              <td style="text-align: center">{{ account.organizer_username }}</td>
+              <td style="text-align: center">{{ account.date_promoted }}</td>
             </tr>
           </tbody>
         </table>
@@ -297,53 +225,24 @@
   </div>
 
   <div class="container">
-    <h4>Request</h4>
+    <h4>Request to be an Organizer</h4>
     <div class="row">
       <div class="col-12">
         <table class="table table-bordered">
           <thead>
             <tr>
-              <th scope="col">ID</th>
-              <th scope="col">Event</th>
-              <th scope="col">Organizer</th>
-              <th scope="col">Actions</th>
+              <th id="reqtbl-col1" style="text-align: center">User ID</th>
+              <th id="reqtbl-col2" style="text-align: center">Username</th>
+              <th id="reqtbl-col3" style="text-align: center">Actions</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <th scope="row">1</th>
-              <td>First Aid Seminar</td>
-              <td>Joseph</td>
-              <td>
-                <button type="button" class="btn btn-primary" data-toggle="modal"
-                  data-target="#modal-accept">Accept</button>
-                <button style="background-color: red;" type="button" class="btn btn-primary" data-toggle="modal"
-                  data-target="#modal-decline">Decline</button>
-                <!-- <button type="button" class="btn btn-danger"><i class="far fa-trash-alt"></i></button> -->
-              </td>
-            </tr>
-            <tr>
-              <th scope="row">2</th>
-              <td>Dancing Workshop</td>
-              <td>Lucelle</td>
-              <td>
-                <button type="button" class="btn btn-primary" data-toggle="modal"
-                  data-target="#modal-accept">Accept</button>
-                <button style="background-color: red;" type="button" class="btn btn-primary" data-toggle="modal"
-                  data-target="#modal-decline">Decline</button>
-                <!-- <button type="button" class="btn btn-danger"><i class="far fa-trash-alt"></i></button> -->
-              </td>
-            </tr>
-            <tr>
-              <th scope="row">3</th>
-              <td>Animation Tutorial</td>
-              <td>Jeanne</td>
-              <td>
-                <button type="button" class="btn btn-primary" data-toggle="modal"
-                  data-target="#modal-accept">Accept</button>
-                <button style="background-color: red;" type="button" class="btn btn-primary" data-toggle="modal"
-                  data-target="#modal-decline">Decline</button>
-                <!-- <button type="button" class="btn btn-danger"><i class="far fa-trash-alt"></i></button> -->
+              <td style="text-align: center">{{ account.user_id }}</td>
+              <td style="text-align: center">{{ account.username }}</td>
+              <td style="text-align: center">
+                <input class="btn btn-primary" type="button" id="requestorg_acceptbtn" value="ACCEPT">
+                <input class="btn btn-danger" type="button" id="requestorg_acceptbtn" value="DECLINE">
               </td>
             </tr>
           </tbody>
@@ -357,128 +256,6 @@
   </div>
 
 </body>
-<!-- Modal-VIew-->
-<div class="modal" tabindex="-1" id="modal-view">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Basketball League Event</h5>
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-      </div>
-      <div class="modal-body">
-        <p>The event will start at 8:00 am in the morning. Player should be their before the Opening will start!</p>
-      </div>
-      <div class="modal-footer">
-        <button style="background-color: red;" type="button" class="btn btn-secondary"
-          data-dismiss="modal">Cancel</button>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- Modal-Join-->
-<div class="modal" tabindex="-1" id="modal-join">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Event</h5>
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-      </div>
-      <div class="modal-body">
-        <p>Do you want to join in this event?</p>
-      </div>
-      <div class="modal-footer">
-        <button style="background-color: blue;" type="button" class="btn btn-secondary"
-          data-dismiss="modal">Yes</button>
-        <button style="background-color: red;" type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Modal-Remove-->
-<div class="modal" tabindex="-1" id="modal-remove">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Event</h5>
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-      </div>
-      <div class="modal-body">
-        <p>Do you want to remove this event from your record?</p>
-      </div>
-      <div class="modal-footer">
-        <button style="background-color: blue;" type="button" class="btn btn-secondary"
-          data-dismiss="modal">Yes</button>
-        <button style="background-color: red;" type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Modal-event-->
-<div class="modal" tabindex="-1" id="modal-viewevent">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Event</h5>
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-      </div>
-      <div class="modal-body">
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
-          magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-          consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-          pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
-          est laborum.</p>
-      </div>
-      <div class="modal-footer">
-
-        <button style="background-color: red;" type="button" class="btn btn-secondary"
-          data-dismiss="modal">Cancel</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Modal-accept-->
-<div class="modal" tabindex="-1" id="modal-accept">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Event</h5>
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-      </div>
-      <div class="modal-body">
-        <p>Do you want to accept this event?</p>
-      </div>
-      <div class="modal-footer">
-        <button style="background-color: blue;" type="button" class="btn btn-secondary"
-          data-dismiss="modal">Yes</button>
-        <button style="background-color: red;" type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Modal-decline-->
-<div class="modal" tabindex="-1" id="modal-decline">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Event</h5>
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-      </div>
-      <div class="modal-body">
-        <p>Do you want to decline this event?</p>
-      </div>
-      <div class="modal-footer">
-        <button style="background-color: blue;" type="button" class="btn btn-secondary"
-          data-dismiss="modal">Yes</button>
-        <button style="background-color: red;" type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-      </div>
-    </div>
-  </div>
-</div>
-
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
   integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>

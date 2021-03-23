@@ -27,6 +27,8 @@ class Event(models.Model):
     event_type = models.CharField(max_length=200)
     event_description = models.CharField(max_length=200)
     participants = models.ManyToManyField(Participant, blank=True)
+    start_date = models.DateTimeField()
+    end_date = models.DateTimeField()
 
     is_deleted = models.BooleanField(default=False)
 
