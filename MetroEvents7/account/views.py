@@ -100,7 +100,9 @@ def organizerPage(request):
         else:
             return HttpResponse("Error")
 
-
+def addEvent(request):
+    return render(request, 'addEvent.html')
+            
 @login_required(login_url='login')
 def homePage(request):
     if request.method == 'GET':
@@ -120,3 +122,5 @@ def eventContext():
         'event_list': event_list
     }
     return context
+
+

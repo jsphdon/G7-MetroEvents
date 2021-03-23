@@ -150,9 +150,8 @@
           </table>
           <form action="addEvent">
             {% csrf_token %}
-            <button type="submit" class="button btn btn-primary"> Add events</button>
+            <button type="submit" class="button btn btn-primary"  href="{% url 'account:addEvent' %}"> Add events</button>
           </form>
-
         </div>
       </div>
     </div>

@@ -7,7 +7,6 @@
     integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css">
-  <!-- <link rel="stylesheet" type="text/css" href="{% static '/css/main.css' %}"> -->
 
 </head>
 
@@ -107,11 +106,17 @@
 
       <label for="decription"><b>Event Description</b></label>
       <input id="eventDescription" type="text" placeholder="Enter Event Type" name="description" required>
+      <input id="eventDescription" type="text" placeholder="Enter Event Description" name="description" required>
 
+      <label for="decription"><b>Event: <br>Start Date</b></label>
+      <input id="eventstartdate" type="date" name="startdate" required>
+
+      <label for="decription"><b>End Date</b></label>
+      <input id="eventenddate" type="date" name="enddate" required>
       <!-- <p>By creating an account you agree to our <a href="#" style="color:dodgerblue">Terms & Privacy</a>.</p> -->
 
       <div class="clearfix">
-        <button type="button" class="cancelbtn">Cancel</button>
+        <button type="button" class="cancelbtn" href="{% url 'account:organizerPage' %}">Cancel</button>
         <button type="submit" class="signupbtn">Create Event</button>
       </div>
     </div>
