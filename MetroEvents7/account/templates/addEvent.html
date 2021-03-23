@@ -8,9 +8,29 @@
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css">
 
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css">
+
+
 </head>
 
 <style>
+   .hello-msg {
+    font-size: 18px;
+    color: #fff;
+    margin-right: 20px;
+  }
+
+  .container {
+    padding: 2rem 0rem;
+  }
+
+  h4 {
+    margin: 2rem 0rem 1rem;
+  }
+
   body {
     font-family: Arial, Helvetica, sans-serif;
   }
@@ -94,6 +114,24 @@
 
 <body>
 
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item active">
+          <a class="nav-link" href="{% url 'account:organizer' %}"><b>MetroEvents</b></a>
+        </li>
+      </ul>
+    </div>
+
+    <span class="hello-msg">Hello, {{request.user}}</span>
+    <span><a class="hello-msg" href="{% url 'account:logout' %}" style="color: white;">Logout</a></span>
+
+  </nav>
+
   <form id="event-form" method="POST" autocomplete="off" enctype="multipart/form-data" style="border:1px solid #ccc">
     {% csrf_token %}
     <div class="container">
@@ -105,10 +143,9 @@
       <input id="eventType" type="text" placeholder="Enter Event Type" name="type" required>
 
       <label for="decription"><b>Event Description</b></label>
-      <input id="eventDescription" type="text" placeholder="Enter Event Type" name="description" required>
       <input id="eventDescription" type="text" placeholder="Enter Event Description" name="description" required>
-
-      <label for="decription"><b>Event: <br>Start Date</b></label>
+   
+      <label for="decription"><b>Start Date</b></label>
       <input id="eventstartdate" type="date" name="startdate" required>
 
       <label for="decription"><b>End Date</b></label>
@@ -116,7 +153,7 @@
       <!-- <p>By creating an account you agree to our <a href="#" style="color:dodgerblue">Terms & Privacy</a>.</p> -->
 
       <div class="clearfix">
-        <button type="button" class="cancelbtn" href="{% url 'account:organizerPage' %}">Cancel</button>
+        <button type="button" class="cancelbtn" href="{% url 'account:organizer' %}">Cancel</button>
         <button type="submit" class="signupbtn">Create Event</button>
       </div>
     </div>

@@ -95,6 +95,8 @@ def organizerPage(request):
             return redirect('account:administrator')
         elif request.user.is_staff:
             return render(request, 'organizerAccount.html')
+            if request.method == 'GET':
+                return render(request, 'addEvent.html')
         elif not request.user.is_staff:
             return redirect('account:myaccount')
         else:
