@@ -1,4 +1,4 @@
-<!-- {% load static %} -->
+{% load static %}
 
 <!DOCTYPE html>
 <html lang="eng">
@@ -99,6 +99,7 @@
 </style>
 
 <body>
+  {% block content %}
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
       aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -122,7 +123,6 @@
   <!-- Table Events-->
 
   <div class="container-fluid">
-    <!--    {% block content %} -->
     <div class="container">
       <h4>Events Near You</h4>
       <div class="row">
@@ -132,25 +132,65 @@
               <tr>
                 <th id="event-col1" style="text-align: center">ID</th>
                 <th id="event-col2" style="text-align: center">Event Type</th>
-                <th id="event-col3" style="text-align: center">Organizer</th>
-                <th id="event-col4" style="text-align: center">Actions</th>
+                <th id="event-col3" style="text-align: center">Start Date</th>
+                <th id="event-col4" style="text-align: center">End Date</th>
+                <th id="event-col5" style="text-align: center">Actions</th>
               </tr>
             </thead>
             <tbody>
+              {% for event in events %}
               <tr>
-                <td style="text-align: center"></td>
-                <td style="text-align: center"></td>
-                <td style="text-align: center"></td>
+                <td style="text-align: center">{{event.id}}</td>
+                <td style="text-align: center">{{event.event_type}}</td>
+                <td style="text-align: center">{{event.start_date}}</td>
+                <td style="text-align: center">{{event.end_date}}</td>
                 <td style="text-align: center">
-                  <input class="btn btn-primary" type="button" id="requestorg_acceptbtn" value="JOIN EVENT">
+                  <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <input type="number" name="event-id" value="{{event.id}}" hidden />
+                    <button name="requestToJoin" type="submit" class="btn btn-primary" data-toggle="modal"
+                      data-target="#modalJoinEvent">
+                      JOIN EVENT
+                    </button>
+                    <div class="modal fade" id="modalJoinEvent" tabindex="-1" aria-labelledby="exampleModalLabel"
+                      aria-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <form method="post">
+                            {% csrf_token %}
+                            <div class="modal-body">
+                              <div class="text-start">
+                                Join request sent.
+                              </div>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                Ok
+                              </button>
+
+                            </div>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                  </form>
                 </td>
               </tr>
+              {% endfor %}
             </tbody>
           </table>
         </div>
       </div>
       <div class="btn-center">
-        <button type="button" class="btn btn-primary" id="request_orgbtn">Request to be an Organizer</button>
+        {% if not user.is_staff%}
+        <button type="submit" class="btn btn-primary" id="request_orgbtn" name="request_orgbtn" data-bs-toggle="modal"
+          data-bs-target="#ModalOrgRequest">Request to be an
+          Organizer</button>
+        {% endif %}
+        <div>{% for message in messages %} {{message}} {% endfor %}</div>
       </div>
 
     </div>
@@ -185,88 +225,12 @@
     </div>
   </div>
 
-  <!--
-    {% endblock %} -->
   </div>
-
+  {% endblock content %}
 </body>
-<!-- Modal-VIew-->
-<div class="modal" tabindex="-1" id="modal-view">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Basketball League Event</h5>
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-      </div>
-      <div class="modal-body">
-        <p>The event will start at 8:00 am in the morning. Players should be there before the Opening starts!</p>
-      </div>
-      <div class="modal-footer">
-        <button style="background-color: red;" type="button" class="btn btn-secondary"
-          data-dismiss="modal">Cancel</button>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- Modal-Join-->
-<div class="modal" tabindex="-1" id="modal-join">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Event</h5>
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-      </div>
-      <div class="modal-body">
-        <p>Do you want to join in this event?</p>
-      </div>
-      <div class="modal-footer">
-        <button style="background-color: blue;" type="button" class="btn btn-secondary"
-          data-dismiss="modal">Yes</button>
-        <button style="background-color: red;" type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-      </div>
-    </div>
-  </div>
-</div>
 
-<!-- Modal-Remove-->
-<div class="modal" tabindex="-1" id="modal-remove">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Event</h5>
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-      </div>
-      <div class="modal-body">
-        <p>Do you want to remove this event from your record?</p>
-      </div>
-      <div class="modal-footer">
-        <button style="background-color: blue;" type="button" class="btn btn-secondary"
-          data-dismiss="modal">Yes</button>
-        <button style="background-color: red;" type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-      </div>
-    </div>
-  </div>
-</div>
 
-<!-- Modal-Organize-->
-<div class="modal" tabindex="-1" id="modal-organize">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Event</h5>
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-      </div>
-      <div class="modal-body">
-        <p>Do you want to be a organizer?</p>
-      </div>
-      <div class="modal-footer">
-        <button style="background-color: blue;" type="button" class="btn btn-secondary"
-          data-dismiss="modal">Yes</button>
-        <button style="background-color: red;" type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-      </div>
-    </div>
-  </div>
-</div>
+
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
   integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>

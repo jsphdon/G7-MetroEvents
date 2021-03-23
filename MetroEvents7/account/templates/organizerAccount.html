@@ -1,5 +1,4 @@
-<!-- {% load static %} -->
-
+{% load static %}
 <!DOCTYPE html>
 <html lang="eng">
 
@@ -96,9 +95,14 @@
     top: 50px;
     text-align: center;
   }
+
+  .btn-addEvent {
+    text-align: center;
+  }
 </style>
 
 <body>
+  {% block content %}
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
       aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -130,35 +134,127 @@
           <table class="table table-bordered">
             <thead>
               <tr>
-                <th scope="col">ID</th>
-                <th scope="col">Event</th>
-                <th scope="col">Organizer</th>
-                <!-- <th scope="col">Participants</th> -->
-                <th scope="col">Actions</th>
+                <th id="eventtbl-col1" style="text-align: center">ID</th>
+                <th id="eventtbl-col2" style="text-align: center">Event Type</th>
+                <th id="eventtbl-col3" style="text-align: center">Start Date</th>
+                <th id="eventtbl-col4" style="text-align: center">End Date</th>
+                <th id="eventtbl-col5" style="text-align: center">Actions</th>
               </tr>
             </thead>
             <tbody>
+              {% for myevent in myEvents %}
               <tr>
-                <td style="text-align: center">{{ account.event_id}}</td>
-                <td style="text-align: center">{{ account.eventType}}</td>
-                <td style="text-align: center">{{ account.username}}</td>
-                <!-- <td style="text-align: center">{{ account.date_registered}}</td> -->
-                <td>
-                  <input class="btn btn-primary" type="button" id="cancel_eventbtn" value="CANCEL EVENT">
+                <td style="text-align: center">{{myevent.id}}</td>
+                <td style="text-align: center">{{myevent.event_type}}</td>
+                <td style="text-align: center">{{myevent.start_date}}</td>
+                <td style="text-align: center">{{myevent.end_date}}</td>
+                <td style="text-align: center">
+                  <button class="btn btn-primary" type="button" id="edit_eventbtn" value="EDIT EVENT"
+                    data-bs-toggle="modal" data-bs-target="#ModalEditEvent-{{myevent.id}}"></button>
+
+                  <button class="btn btn-danger" type="button" id="cancel_eventbtn" value="CANCEL EVENT"
+                    data-bs-toggle="modal" data-bs-target="#ModalDeleteEvent-{{myevent.id}}"></button>
+
+                  <!-- Edit Modal -->
+                  <div class="modal fade" id="ModalEditEvent-{{myevent.id}}" tabindex="-1" role="dialog"
+                    aria-labelledby="viewModal" aria-hidden="true">
+                    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header" name="sku">
+                          <h5 class="col-12 modal-title text-center"><b>View/Edit</b></h5>
+                        </div>
+                        <div id="UpdateEventForm" method="post">
+                          {% csrf_token %}
+                          <div class="modal-body">
+
+                            <!--Event Type-->
+                            <div class="row text-center">
+                              <div class="col-lg-12">
+                                <label><b>Event Type</b></label>
+                                <input type="text" class="form-control" id="id-event-title" name="event_type"
+                                  placeholder="Event Type" required value="{{myevent.event_type}}" />
+                              </div>
+                            </div>
+                            <!--END Event Type-->
+                            <br>
+                            <!-- Row for Title, Release Date and Director-->
+                            <div class="row text-center justify-content-center">
+                              <div class="col">
+                                <label for="decription"><b>Start Date</b></label>
+                                <input id="date_started" type="date" name="start_date" value="{{myevent.start_date}}"
+                                  required>
+                              </div>
+                            </div>
+                            <div class="row text-center justify-content-center">
+                              <div class="col">
+                                <label for="decription"><b>End Date</b></label>
+                                <input id="date_started" type="date" name="end_date" value="{{myevent.end_date}}"
+                                  required>
+                              </div>
+                            </div>
+                            <br>
+                            <div class="modal-footer justify-content-center">
+                              <button type="submit" id="UpdateBtn" name="UpdateBtn" class="btn btn-primary">
+                                Update
+                              </button>
+                              <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                Cancel
+                              </button>
+                            </div>
+                          </div>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Modal Delete -->
+                    <div class="modal fade" id="modalDelete-{{myevent.id}}" tabindex="-1"
+                      aria-labelledby="exampleModalLabel" aria-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h2 class="modal-title" id="id-modal-delete">
+                              Delete Event
+                            </h2>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+
+                          <form id="DeleteEventForm" method="post">
+                            {% csrf_token %}
+                            <div class="modal-body">
+                              <input type="text" name="eventID" hidden />
+                              Are you sure you want to delete this event?
+                            </div>
+                            <input type="text" value="{{myevent.id}}" name="event-id" hidden readonly />
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                No
+                              </button>
+                              <button type="submit" id="DeleteBtn" name="DeleteBtn" class="btn btn-danger">
+                                Yes
+                              </button>
+                            </div>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Modal Delete Ends -->
                 </td>
               </tr>
+              {% endfor %}
             </tbody>
           </table>
-          <form action="addEvent">
-            {% csrf_token %}
-            <button type="submit" class="button btn btn-primary" href="{% url 'account:addEvent' %}"> Add
-              events</button>
-          </form>
+          <div class="btn-addEvent">
+            <a type="button" class="button btn btn-primary" href="{% url 'account:addEvent' %}">
+              Add
+              events</a>
+          </div>
+
         </div>
       </div>
     </div>
 
-    <!-- Table My Events-->
+    <!-- Table Requests to Join-->
     <div class="container">
       <h4>Join Requests</h4>
       <div class="row">
@@ -166,25 +262,29 @@
           <table class="table table-bordered">
             <thead>
               <tr>
-                <th scope="col">ID</th>
-                <th scope="col">Username</th>
-                <th scope="col">Email</th>
-                <th scope="col">Event Name</th>
-                <th scope="col">Manage</th>
+                <th id="reqeventtbl-col1" style="text-align: center">ID</th>
+                <th id="reqeventtbl-col2" style="text-align: center">Username</th>
+                <th id="reqeventtbl-col3" style="text-align: center">Event ID</th>
+                <th id="reqeventtbl-col4" style="text-align: center">Event Type</th>
+                <th id="reqeventtbl-col5" style="text-align: center">Manage</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody id="JoinRequest-table">
+              {% for req in requests %}
               <tr>
-                <td>1</td>
-                <td>kyle01</td>
-                <td>Kyle@gmail.com</td>
-                <td>Coding Event</td>
-                <td>
-                  <button type="button" class="btn btn-primary" id="myBtn">Accept</button>
-                  <button type="button" class="btn btn-success">Decline</button>
-                  <!-- <button type="button" class="btn btn-danger"><i class="far fa-trash-alt"></i></button> -->
+                <td style="text-align: center">{{req.user_id}}</td>
+                <td style="text-align: center">{{req.username}}</td>
+                <td style="text-align: center">{{req.event_id}}</td>
+                <td style="text-align: center">{{req.event}}</td>
+                <td style="text-align: center">
+                  <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <button class="btn btn-primary" type="submit" name="acceptRequestbtn" value="ACCEPT"></button>
+                    <button class="btn btn-danger" type="submit" name="denyRequestbtn" value="DECLINE"></button>
+                  </form>
                 </td>
               </tr>
+              {% endfor %}
             </tbody>
           </table>
         </div>
@@ -194,7 +294,7 @@
 
 
   </div>
-
+  {% endblock content %}
 </body>
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
