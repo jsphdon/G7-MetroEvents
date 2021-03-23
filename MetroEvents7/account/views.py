@@ -12,7 +12,7 @@ from django.contrib.auth.models import Group
 
 # Create your views here.
 from .forms import CreateUserForm
-from .models import User
+from .models import User, Event
 from .decorators import unauthenticated_user
 
 
@@ -43,6 +43,8 @@ def loginPage(request):
             return redirect('account:myaccount')
         elif request.user.is_superuser:
             return redirect('account:administrator')
+        elif request.user.is_staff:
+            return redirect('account:organizer')
         else:
             return redirect('account:myaccount')
     else:
@@ -58,6 +60,8 @@ def loginPage(request):
                     return redirect('account:myaccount')
                 elif user.is_superuser:
                     return redirect('account:administrator')
+                elif user.is_staff:
+                    return redirect('account:organizer')
                 else:
                     return HttpResponse("ERROR")
             else:
@@ -74,18 +78,45 @@ def logoutUser(request):
 @login_required(login_url='login')
 def adminPage(request):
     if request.method == 'GET':
-        context = {}
-        return render(request, 'adminAccount.html', context)
+        if request.user.is_superuser:
+            return render(request, 'adminAccount.html')
+        elif request.user.is_staff:
+            return redirect('account:organizer')
+        elif not request.user.is_staff:
+            return redirect('account:myaccount')
+        else:
+            return HttpResponse("Error")
 
 
-# @login_required(login_url='login')
-# def organizerPage(request):
-#     if request.method == 'GET':
-#         context = {}
-#         return render(request, 'organizerAccount.html', context)
+@login_required(login_url='login')
+def organizerPage(request):
+    if request.method == 'GET':
+        if request.user.is_superuser:
+            return redirect('account:administrator')
+        elif request.user.is_staff:
+            return render(request, 'organizerAccount.html')
+        elif not request.user.is_staff:
+            return redirect('account:myaccount')
+        else:
+            return HttpResponse("Error")
+
 
 @login_required(login_url='login')
 def homePage(request):
     if request.method == 'GET':
-        context = {}
-        return render(request, 'useraccount.html', context)
+        if request.user.is_superuser:
+            return redirect('account:administrator')
+        elif request.user.is_staff:
+            return redirect('account:organizer')
+        elif not request.user.is_staff:
+            return render(request, 'useraccount.html')
+        else:
+            return HttpResponse("Error")
+
+
+def eventContext():
+    event_list = Event.objects.all()
+    context = {
+        'event_list': event_list
+    }
+    return context

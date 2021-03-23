@@ -10,4 +10,6 @@ urlpatterns = [
     path('myaccount/', views.homePage, name="myaccount"),
 
     path('administrator/', views.adminPage, name="administrator"),
+    path('organizer/', views.organizerPage, name="organizer"),
+    # path('organizer/addEvent/', views.organizerPage, name="organizer"),
 ]

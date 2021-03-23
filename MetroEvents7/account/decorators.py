@@ -35,7 +35,7 @@ def unauthenticated_user(view_func):
 #             group = request.user.groups.all()[0].name
 
 #         if group == 'user':
-#             return redirect('account:myaccount')
+#             return redirect('account:login')
 
 #         if group == 'admin':
 #             return view_func(request, *args, **kwargs)
