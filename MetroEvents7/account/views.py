@@ -19,7 +19,14 @@ from .forms import CreateUserForm
 from .models import User, Comment, Event, Organizer, Request
 
 
+def format_date(objects):
+    for object in objects:
+        object.start_date = object.start_date.strftime("%Y-%m-%d")
+        object.end_date = object.end_date.strftime("%Y-%m-%d")
+
 #! REGISTER PAGE
+
+
 class RegisterPage(View):
     def get(self, request):
         if request.user.is_authenticated:
@@ -104,7 +111,7 @@ class HomePage(View):
                 'myEvents': myEvents,
                 'events': events,
             }
-            return render(request, 'useraccount.html')
+            return render(request, 'useraccount.html', context)
         else:
             return HttpResponse("Error")
 
@@ -154,13 +161,13 @@ class HomePage(View):
             myeventid = request.POST.get('myevent-id')
             event = Event.objects.get(id=myeventid)
 
-            comments = request.POST.get('comments')
+            comments = request.POST.get('comment')
             print(comments)
 
-            review = Comment.objects.create(comments=comments)
-            event.review.add(review)
+            comment = Comment.objects.update(comment=comments)
+            event.comment.add(comment)
             event.save()
-            messages.info(request, 'Review submitted successfully!')
+            messages.info(request, 'Comment submitted successfully!')
         return redirect('account:myaccount')
 
 
@@ -172,10 +179,11 @@ class AdminPage(View):
             currentUser = request.user
             if currentUser.is_superuser:
                 requests = Request.objects.filter(
-                    requestType="Promote to  Organizer", status="Reviewing")
+                    requestType="Promote to Organizer", status="Reviewing")
                 events = Event.objects.all()
                 users = User.objects.all()
                 organizers = Organizer.objects.all()
+                print(requests)
                 context = {
                     'users': users,
                     'events': events,
@@ -196,10 +204,12 @@ class AdminPage(View):
         if 'requestorg_acceptbtn' in request.POST:
             userid = request.POST.get("user-id")
             requestid = request.POST.get("request-id")
+            print(userid)
+            print(requestid)
             req = Request.objects.get(id=requestid)
             organizer = Organizer.objects.create(organizer_id=userid)
             req.status = "Accept"
-            req.date_replied = datetime.datetime.now()
+            req.date_replied = datetime.now()
             req.replied_by = request.user
             user = req.user
             user.is_staff = True
@@ -210,21 +220,46 @@ class AdminPage(View):
             print("Request to be an organizer, DECLINED")
             req = Request.objects.get(id=request.POST.get("request-id"))
             req.status = "Decline"
-            req.date_replied = datetime.datetime.now()
+            req.date_replied = datetime.now()
             req.replied_by = request.user
             req.save()
+
+        if 'EditBtn' in request.POST:
+            id = request.POST.get("event_id")
+            event_type = request.POST.get("event_type")
+            start_date = request.POST.get("start_date")
+            end_date = request.POST.get("end_date")
+            Event.objects.filter(id=id).update(
+                event_type=event_type, start_date=start_date, end_date=end_date)
+        elif 'DeleteBtn' in request.POST:
+            print('Deleted Event')
+            id = request.POST.get("event_id")
+            Event.objects.filter(id=id).delete()
         return redirect('account:administrator')
 
-
 #! ORGANIZER PAGE
+
+
 @method_decorator(login_required, name='dispatch')
 class OrganizerPage(View):
     def get(self, request):
         if request.user.is_authenticated:
-            if request.user.is_superuser:
+            currentUser = request.user
+            if currentUser.is_superuser:
                 return redirect('account:administrator')
-            elif request.user.is_staff:
-                return render(request, 'organizerAccount.html')
+            elif currentUser.is_staff:
+                organizer = Organizer.objects.get(organizer_id=currentUser)
+                myEvents = Event.objects.filter(organizer=organizer)
+
+                requests = Request.objects.filter(
+                    event_id__in=myEvents, status="Reviewing")
+
+                format_date(myEvents)
+                context = {
+                    'myEvents': myEvents,
+                    'requests': requests,
+                }
+                return render(request, 'organizerAccount.html', context)
             elif not request.user.is_staff:
                 return redirect('account:myaccount')
             else:
@@ -233,34 +268,34 @@ class OrganizerPage(View):
 
     def post(self, request):
         organizer = request.user
-        if 'EditBtn' in request.POST:
-            id = request.POST.get("id")
-            event_type = request.POST.get("event_type")
-            start_date = request.POST.get("start_date")
-            end_date = request.POST.get("end_date")
-            Event.objects.filter(id=id).update(event_type=event_type,
-                                               start_date=start_date, end_date=end_date)
-        elif 'DeleteBtn' in request.POST:
-            print('Deleted Event')
-            id = request.POST.get("event_id")
-            Event.objects.get(id=id).delete()
-
-        if 'acceptRequestbtn' in request.POST:
-            event = Event.objects.get(id=request.POST.get("event_id"))
-            req = Request.objects.get(id=request.POST.get("request_id"))
-            user = User.objects.get(id=request.POST.get("user_id"))
-            event.participants.add(user)
-            req.replied_by = organizer
-            req.date_replied = datetime.datetime.now()
-            req.status = "Accepted"
-            req.save()
-        if 'denyRequestbtn' in request.POST:
-            req = Request.objects.get(id=request.POST.get("request-id"))
-            req.replied_by = organizer
-            req.date_replied = datetime.datetime.now()
-            req.status = "Decline"
-            req.save()
-        return redirect('account:organizer')
+        if request.method == 'POST':
+            if 'EditBtn' in request.POST:
+                id = request.POST.get("event_id")
+                event_type = request.POST.get("event_type")
+                start_date = request.POST.get("start_date")
+                end_date = request.POST.get("end_date")
+                Event.objects.filter(id=id).update(
+                    event_type=event_type, start_date=start_date, end_date=end_date)
+            elif 'DeleteBtn' in request.POST:
+                print('Deleted Event')
+                id = request.POST.get("event_id")
+                Event.objects.filter(id=id).delete()
+            elif 'acceptRequestbtn' in request.POST:
+                event = Event.objects.get(id=request.POST.get("event_id"))
+                req = Request.objects.get(id=request.POST.get("request_id"))
+                user = User.objects.get(id=request.POST.get("user_id"))
+                event.participants.add(user)
+                req.replied_by = organizer
+                req.date_replied = datetime.now()
+                req.status = "Accept"
+                req.save()
+            elif 'denyRequestbtn' in request.POST:
+                req = Request.objects.get(id=request.POST.get("request-id"))
+                req.replied_by = organizer
+                req.date_replied = datetime.now()
+                req.status = "Decline"
+                req.save()
+            return redirect('account:organizer')
 
 
 #! ADD EVENT PAGE

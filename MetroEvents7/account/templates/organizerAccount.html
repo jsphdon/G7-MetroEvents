@@ -126,9 +126,11 @@
   <!-- Table Events-->
 
   <div class="container-fluid">
-
     <div class="container">
       <h4>My Organized Events</h4>
+      {% for message in messages %}
+      <p id="messages">{{message}}</p>
+      {% endfor %}
       <div class="row">
         <div class="col-12">
           <table class="table table-bordered">
@@ -149,96 +151,95 @@
                 <td style="text-align: center">{{myevent.start_date}}</td>
                 <td style="text-align: center">{{myevent.end_date}}</td>
                 <td style="text-align: center">
-                  <button class="btn btn-primary" type="button" id="edit_eventbtn" value="EDIT EVENT"
-                    data-bs-toggle="modal" data-bs-target="#ModalEditEvent-{{myevent.id}}"></button>
+                  <button class="btn btn-primary" type="button" id="edit_eventbtn" data-toggle="modal"
+                    data-target="#ModalEditEvent-{{myevent.id}}"><b>EDIT EVENT</b></button>
 
-                  <button class="btn btn-danger" type="button" id="cancel_eventbtn" value="CANCEL EVENT"
-                    data-bs-toggle="modal" data-bs-target="#ModalDeleteEvent-{{myevent.id}}"></button>
+                  <button class="btn btn-danger" type="button" id="cancel_eventbtn" data-toggle="modal"
+                    data-target="#ModalDeleteEvent-{{myevent.id}}"><b>REMOVE
+                      EVENT</b></button>
 
                   <!-- Edit Modal -->
-                  <div class="modal fade" id="ModalEditEvent-{{myevent.id}}" tabindex="-1" role="dialog"
-                    aria-labelledby="viewModal" aria-hidden="true">
-                    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                  <div class="modal fade" id="ModalEditEvent-{{myevent.id}}" tabindex="-1"
+                    aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg" role="document">
                       <div class="modal-content">
-                        <div class="modal-header" name="sku">
+                        <div class="modal-header">
                           <h5 class="col-12 modal-title text-center"><b>View/Edit</b></h5>
                         </div>
-                        <div id="UpdateEventForm" method="post">
-                          {% csrf_token %}
-                          <div class="modal-body">
-
-                            <!--Event Type-->
-                            <div class="row text-center">
-                              <div class="col-lg-12">
-                                <label><b>Event Type</b></label>
-                                <input type="text" class="form-control" id="id-event-title" name="event_type"
-                                  placeholder="Event Type" required value="{{myevent.event_type}}" />
-                              </div>
-                            </div>
-                            <!--END Event Type-->
-                            <br>
-                            <!-- Row for Title, Release Date and Director-->
-                            <div class="row text-center justify-content-center">
-                              <div class="col">
-                                <label for="decription"><b>Start Date</b></label>
-                                <input id="date_started" type="date" name="start_date" value="{{myevent.start_date}}"
-                                  required>
-                              </div>
-                            </div>
-                            <div class="row text-center justify-content-center">
-                              <div class="col">
-                                <label for="decription"><b>End Date</b></label>
-                                <input id="date_started" type="date" name="end_date" value="{{myevent.end_date}}"
-                                  required>
-                              </div>
-                            </div>
-                            <br>
-                            <div class="modal-footer justify-content-center">
-                              <button type="submit" id="UpdateBtn" name="UpdateBtn" class="btn btn-primary">
-                                Update
-                              </button>
-                              <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                                Cancel
-                              </button>
-                            </div>
-                          </div>
-                          </form>
-                        </div>
-                      </div>
-                    </div>
-
-                    <!-- Modal Delete -->
-                    <div class="modal fade" id="modalDelete-{{myevent.id}}" tabindex="-1"
-                      aria-labelledby="exampleModalLabel" aria-hidden="true">
-                      <div class="modal-dialog">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <h2 class="modal-title" id="id-modal-delete">
-                              Delete Event
-                            </h2>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                          </div>
-
-                          <form id="DeleteEventForm" method="post">
+                        <div id="UpdateEventForm">
+                          <form method="post">
                             {% csrf_token %}
                             <div class="modal-body">
-                              <input type="text" name="eventID" hidden />
-                              Are you sure you want to delete this event?
-                            </div>
-                            <input type="text" value="{{myevent.id}}" name="event-id" hidden readonly />
-                            <div class="modal-footer">
-                              <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                                No
-                              </button>
-                              <button type="submit" id="DeleteBtn" name="DeleteBtn" class="btn btn-danger">
-                                Yes
-                              </button>
+                              <!--Event Type-->
+                              <div class="row text-center">
+                                <div class="col-lg-12">
+                                  <label><b>Event Type</b></label>
+                                  <input type="text" class="form-control" id="id-event-title" name="event_type"
+                                    placeholder="Event Type" required value="{{myevent.event_type}}" />
+                                </div>
+                              </div>
+                              <!--END Event Type-->
+                              <br>
+                              <!-- Start Date and End Date-->
+                              <div class="row text-center justify-content-center">
+                                <div class="col">
+                                  <label for="decription"><b>Start Date</b></label>
+                                  <input id="date_started" type="date" name="start_date" value="{{myevent.start_date}}"
+                                    required>
+                                </div>
+                              </div>
+                              <div class="row text-center justify-content-center">
+                                <div class="col">
+                                  <label for="decription"><b>End Date</b></label>
+                                  <input id="date_started" type="date" name="end_date" value="{{myevent.end_date}}"
+                                    required>
+                                </div>
+                              </div>
+                              <br>
+                              <input type="text" value="{{myevent.id}}" name="event_id" hidden readonly />
+                              <div class="modal-footer justify-content-center">
+                                <button type="submit" id="EditBtn" name="EditBtn" class="btn btn-primary">
+                                  Update
+                                </button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                  Cancel
+                                </button>
+                              </div>
                             </div>
                           </form>
                         </div>
                       </div>
                     </div>
-                    <!-- Modal Delete Ends -->
+                  </div>
+                  <!-- Modal Delete -->
+                  <div class="modal fade" id="ModalDeleteEvent-{{myevent.id}}" tabindex="-1"
+                    aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="col-12 modal-title text-center"><b>Remove/Delete</b></h5>
+                        </div>
+
+                        <form id="DeleteEventForm" method="post">
+                          {% csrf_token %}
+                          <div class="modal-body">
+                            <input type="text" name="eventID" hidden />
+                            Are you sure you want to delete this event?
+                          </div>
+                          <input type="text" value="{{myevent.id}}" name="event_id" hidden readonly />
+                          <div class="modal-footer">
+                            <button type="submit" id="DeleteBtn" name="DeleteBtn" class="btn btn-danger">
+                              Yes
+                            </button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                              No
+                            </button>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Modal Delete Ends -->
                 </td>
               </tr>
               {% endfor %}
@@ -246,8 +247,7 @@
           </table>
           <div class="btn-addEvent">
             <a type="button" class="button btn btn-primary" href="{% url 'account:addEvent' %}">
-              Add
-              events</a>
+              <b>ADD EVENTS</b></a>
           </div>
 
         </div>
@@ -273,14 +273,17 @@
               {% for req in requests %}
               <tr>
                 <td style="text-align: center">{{req.user_id}}</td>
-                <td style="text-align: center">{{req.username}}</td>
+                <td style="text-align: center">{{req.user}}</td>
                 <td style="text-align: center">{{req.event_id}}</td>
                 <td style="text-align: center">{{req.event}}</td>
                 <td style="text-align: center">
                   <form method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
-                    <button class="btn btn-primary" type="submit" name="acceptRequestbtn" value="ACCEPT"></button>
-                    <button class="btn btn-danger" type="submit" name="denyRequestbtn" value="DECLINE"></button>
+                    <input type="number" name="request_id" value="{{req.id}}" hidden readonly />
+                    <input type="number" name="event_id" value="{{req.event_id}}" hidden readonly />
+                    <input type="number" name="user_id" value="{{req.user_id}}" hidden readonly />
+                    <button class="btn btn-primary" type="submit" name="acceptRequestbtn"><b>ACCEPT</b></button>
+                    <button class="btn btn-danger" type="submit" name="denyRequestbtn"><b>DECLINE</b></button>
                   </form>
                 </td>
               </tr>

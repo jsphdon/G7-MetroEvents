@@ -180,104 +180,106 @@
             <tbody>
               {% for myevent in events %}
               <tr>
-                <td style="text-align: center">{{ myevent.event_id }}</td>
+                <td style="text-align: center">{{ myevent.id }}</td>
                 <td style="text-align: center">{{ myevent.event_type }}</td>
                 <td style="text-align: center">{{ myevent.start_date }}</td>
                 <td style="text-align: center">{{ myevent.end_date }}</td>
                 <td style="text-align: center">
-                  <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                    data-bs-target="#ModalEditEvent-{{myevent.id}}">
-                    Edit Event
+                  <button type="button" class="btn btn-primary" data-toggle="modal"
+                    data-target="#ModalEditEvent-{{myevent.id}}">
+                    <b>EDIT EVENT</b>
                   </button>
 
-                  <button type="button" class="btn btn-danger" data-bs-toggle="modal"
-                    data-bs-target="#modalDelete-{{myevent.id}}">
-                    Cancel Event
+                  <button type="button" class="btn btn-danger" data-toggle="modal"
+                    data-target="#ModalDeleteEvent-{{myevent.id}}">
+                    <b>REMOVE EVENT</b>
                   </button>
                   <!-- Edit Modal -->
                   <div class="modal fade" id="ModalEditEvent-{{myevent.id}}" tabindex="-1" role="dialog"
                     aria-labelledby="viewModal" aria-hidden="true">
-                    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                    <div class="modal-dialog modal-lg" role="document">
                       <div class="modal-content">
-                        <div class="modal-header" name="sku">
+                        <div class="modal-header">
                           <h5 class="col-12 modal-title text-center"><b>Edit</b></h5>
                         </div>
-                        <div id="UpdateEventForm" method="post">
-                          {% csrf_token %}
-                          <div class="modal-body">
+                        <div id="UpdateEventForm">
 
-                            <!--Event Type-->
-                            <div class="row text-center">
-                              <div class="col-lg-12">
-                                <label><b>Event Type</b></label>
-                                <input type="text" class="form-control" id="id-event-title" name="event_type"
-                                  placeholder="Event Type" required value="{{myevent.event_type}}" />
-                              </div>
-                            </div>
-                            <!--END Event Type-->
-                            <br>
-                            <!-- Row for Title, Release Date and Director-->
-                            <div class="row text-center justify-content-center">
-                              <div class="col">
-                                <label for="decription"><b>Start Date</b></label>
-                                <input id="date_started" type="date" name="start_date" value="{{myevent.start_date}}"
-                                  required>
-                              </div>
-                            </div>
-                            <div class="row text-center justify-content-center">
-                              <div class="col">
-                                <label for="decription"><b>End Date</b></label>
-                                <input id="date_started" type="date" name="end_date" value="{{myevent.end_date}}"
-                                  required>
-                              </div>
-                            </div>
-                            <br>
-                            <div class="modal-footer justify-content-center">
-                              <button type="submit" id="UpdateBtn" name="UpdateBtn" class="btn btn-primary">
-                                Update
-                              </button>
-                              <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                                Cancel
-                              </button>
-                            </div>
-                          </div>
-                          </form>
-                        </div>
-                      </div>
-                    </div>
-
-                    <!-- Modal Delete -->
-                    <div class="modal fade" id="modalDelete-{{myevent.id}}" tabindex="-1"
-                      aria-labelledby="exampleModalLabel" aria-hidden="true">
-                      <div class="modal-dialog">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <h2 class="modal-title" id="id-modal-delete">
-                              Cancel Event
-                            </h2>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                          </div>
-
-                          <form id="DeleteEventForm" method="post">
+                          <form method="post">
                             {% csrf_token %}
                             <div class="modal-body">
-                              <input type="text" name="eventID" hidden />
-                              Are you sure you want to cancel this event?
-                            </div>
-                            <input type="text" value="{{myevent.id}}" name="event-id" hidden readonly />
-                            <div class="modal-footer">
-                              <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                                No
-                              </button>
-                              <button type="submit" id="DeleteBtn" name="DeleteBtn" class="btn btn-danger">
-                                Yes
-                              </button>
+                              <!--Event Type-->
+                              <div class="row text-center">
+                                <div class="col-lg-12">
+                                  <label><b>Event Type</b></label>
+                                  <input type="text" class="form-control" id="id-event-title" name="event_type"
+                                    placeholder="Event Type" required value="{{myevent.event_type}}" />
+                                </div>
+                              </div>
+                              <!--END Event Type-->
+                              <br>
+                              <!-- Row for Start Date and End Date-->
+                              <div class="row text-center justify-content-center">
+                                <div class="col">
+                                  <label for="decription"><b>Start Date</b></label>
+                                  <input id="start_date" type="date" name="start_date" value="{{myevent.start_date}}"
+                                    required>
+                                </div>
+                              </div>
+                              <div class="row text-center justify-content-center">
+                                <div class="col">
+                                  <label for="decription"><b>End Date</b></label>
+                                  <input id="end_date" type="date" name="end_date" value="{{myevent.end_date}}"
+                                    required>
+                                </div>
+                              </div>
+                              <br>
+                              <input type="text" value="{{myevent.id}}" name="event_id" hidden readonly />
+                              <div class="modal-footer justify-content-center">
+                                <button type="submit" id="EditBtn" name="EditBtn" class="btn btn-primary">
+                                  Update
+                                </button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                  Cancel
+                                </button>
+                              </div>
                             </div>
                           </form>
                         </div>
                       </div>
                     </div>
-                    <!-- Modal Delete Ends -->
+                  </div>
+                  <!-- Modal Delete -->
+                  <div class="modal fade" id="ModalDeleteEvent-{{myevent.id}}" tabindex="-1"
+                    aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h4 class="modal-title" id="id-modal-delete">
+                            Cancel/Remove Event
+                          </h4>
+
+                        </div>
+
+                        <form id="DeleteEventForm" method="post">
+                          {% csrf_token %}
+                          <div class="modal-body">
+                            <input type="text" name="eventID" hidden />
+                            Are you sure you want to cancel this event?
+                          </div>
+                          <input type="text" value="{{myevent.id}}" name="event_id" hidden readonly />
+                          <div class="modal-footer">
+                            <button type="submit" id="DeleteBtn" name="DeleteBtn" class="btn btn-danger">
+                              Yes
+                            </button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                              No
+                            </button>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Modal Delete Ends -->
                 </td>
 
               </tr>
@@ -299,16 +301,14 @@
           <thead>
             <tr>
               <th id="orgtbl-col1" style="text-align: center">ID</th>
-              <th id="orgtbl-col2" style="text-align: center">Organizer_Username</th>
               <th id="orgtbl-col3" style="text-align: center">Date Promoted</th>
             </tr>
           </thead>
           <tbody>
             {% for organizer in organizers %}
             <tr>
-              <td style="text-align: center">{{ organizer.id }}</td>
-              <td style="text-align: center">{{ organizer.user }}</td>
-              <td style="text-align: center">{{ organizer.promotion_date }}</td>
+              <td style="text-align: center">{{organizer.organizer_id}}</td>
+              <td style="text-align: center">{{organizer.promotion_date}}</td>
             </tr>
             {% endfor %}
           </tbody>
@@ -339,6 +339,8 @@
               <td style="text-align: center">
                 <form method="POST" enctype="multipart/form-data">
                   {% csrf_token %}
+                  <input type="number" name="request-id" value="{{request.id}}" hidden readonly />
+                  <input type="number" name="user-id" value="{{request.user.id}}" hidden readonly />
                   <button name="requestorg_acceptbtn" type="submit" class="btn btn-primary"><b>
                       Accept</b>
                   </button>

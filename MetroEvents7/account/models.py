@@ -20,8 +20,6 @@ class Event(models.Model):
     upvotes = models.IntegerField(default=0, blank=True, null=True)
     comment = models.ManyToManyField(Comment, blank=True)
 
-    is_deleted = models.BooleanField(default=False)
-
     def __str__(self):
         return self.event_type
 
@@ -29,8 +27,8 @@ class Event(models.Model):
 class Request(models.Model):
     REQUEST_TYPE = (
         ('Join Event', 'Join Event'),
-        ('Promote to Organizer', 'Promote to Organizer'),
-        ('Promote to Admin', 'Promote to Admin'),
+        ('Organizer Promotion', 'Organizer Promotion'),
+        ('Admin Promotion', 'Admin Promotion'),
     )
     REQUEST_STATUS = (
         ('Reviewing', 'Reviewing'),

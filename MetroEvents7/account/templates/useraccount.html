@@ -148,7 +148,7 @@
                   <form method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
                     <input type="number" name="event-id" value="{{event.id}}" hidden />
-                    <button name="requestToJoin" type="submit" class="btn btn-primary" data-toggle="modal"
+                    <button name="request_joinbtn" type="submit" class="btn btn-primary" data-toggle="modal"
                       data-target="#modalJoinEvent">
                       JOIN EVENT
                     </button>
@@ -246,8 +246,8 @@
                 <td style="text-align: center">{{myevent.start_date}}</td>
                 <td style="text-align: center">{{myevent.end_date}}</td>
                 <td style="text-align: center">
-                  <button type="submit" class="btn btn-primary" data-bs-toggle="modal"
-                    data-bs-target="#ModalUpvote-{{myevent.id}}">
+                  <button type="submit" class="btn btn-success" data-toggle="modal"
+                    data-target="#ModalUpvote-{{myevent.id}}">
                     Upvote
                   </button>
                   <div class="modal fade" id="ModalUpvote-{{myevent.id}}">
@@ -272,11 +272,11 @@
                                 <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
                                   <input type="radio" class="btn-check" name="btnradio" id="btnradio1"
                                     autocomplete="off" checked value="upvote" />
-                                  <label class="btn btn-outline-primary" for="btnradio1">Upvote</label>
+                                  <label class="btn btn-outline-success" for="btnradio1">Upvote</label>
 
                                   <input type="radio" class="btn-check" name="btnradio" id="btnradio3"
                                     autocomplete="off" value="downvote" />
-                                  <label class="btn btn-outline-primary" for="btnradio3">Downvote</label>
+                                  <label class="btn btn-outline-danger" for="btnradio3">Downvote</label>
                                 </div>
                               </div>
                             </div>
@@ -295,7 +295,7 @@
                     </div>
                   </div>
 
-                  <button type="submit" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ModalComment">
+                  <button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#ModalComment">
                     Comment
                   </button>
 
@@ -317,7 +317,7 @@
                               </div>
                             </div>
                             <div>
-                              <textarea class="w-75" name="comments" placeholder="Type here..." style="
+                              <textarea class="w-75" name="comment" placeholder="Type here..." style="
                                   font-family: sans-serif;
                                   font-size: 1em;
                                   height: 150px;
