@@ -16,7 +16,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 
 from .forms import CreateUserForm
-from .models import User, Comment, Event, Organizer, Administrator, Request
+from .models import User, Comment, Event, Organizer, Request
 
 
 #! REGISTER PAGE
@@ -238,7 +238,6 @@ class OrganizerPage(View):
             event_type = request.POST.get("event_type")
             start_date = request.POST.get("start_date")
             end_date = request.POST.get("end_date")
-            print(id, type, start_date, end_date)
             Event.objects.filter(id=id).update(event_type=event_type,
                                                start_date=start_date, end_date=end_date)
         elif 'DeleteBtn' in request.POST:
@@ -277,13 +276,11 @@ class AddEvent(View):
     def post(self, request):
         organizer = Organizer.objects.get(organizer_id=request.user)
         event_type = request.POST.get("event_type")
-        date_started = request.POST.get("start_date")
-        date_ended = request.POST.get("end_date")
-        print(date_started)
-        print(date_ended)
+        start_date = request.POST.get("start_date")
+        end_date = request.POST.get("end_date")
+
         event = Event.objects.create(event_type=event_type,
-                                     date_started=date_started, date_ended=date_ended)
-        print(event.date_started)
+                                     start_date=start_date, end_date=end_date)
         organizer.event.add(event)
 
         print("Event successfully created.")
