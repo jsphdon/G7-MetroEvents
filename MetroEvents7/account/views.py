@@ -16,28 +16,29 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 
 from .forms import CreateUserForm
-from .models import User, Comment, Event, Organizer, Administrator, Requests
+from .models import User, Comment, Event, Organizer, Administrator, Request
 
 
 #! REGISTER PAGE
 class RegisterPage(View):
     def get(self, request):
         if request.user.is_authenticated:
-            return redirect('app:myaccount')
+            return redirect('account:myaccount')
         form = CreateUserForm()
-        if request.method == 'POST':
-            form = CreateUserForm(request.POST)
-            if form.is_valid():
-                user = form.save()
-                username = form.cleaned_data.get('username')
 
-                group = Group.objects.get(name='user')
-                user.groups.add(group)
+        context = {'form': form}
+        return render(request, 'register.html', context)
 
-                messages.success(
-                    request, 'Account was created for ' + username)
+    def post(self, request):
+        form = CreateUserForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            username = form.cleaned_data.get('username')
 
-                return redirect('account:login')
+            messages.success(
+                request, 'Account was created for ' + username)
+
+            return redirect('account:login')
 
         context = {'form': form}
         return render(request, 'register.html', context)
@@ -111,31 +112,31 @@ class HomePage(View):
         if 'request_joinbtn' in request.POST:
             eventid = request.POST.get('event-id')
             print()
-            req = Requests.objects.filter(
+            req = Request.objects.filter(
                 user=request.user, requestType="Join Event", event_id=eventid)
             if req:
                 messages.info(
                     request, "You have already requested to join the event.")
-                return redirect('app:user')
-            reqJoin = Requests.objects.create(
-                user=request.user, requestType="Join Event", id=id)
+                return redirect('account:user')
+            reqJoin = Request.objects.create(
+                user=request.user, requestType="Join Event", event_id=eventid)
 
             messages.info(
                 request, "You have requested to join the event, you will received a notification once the organizer approve your request.")
 
         elif 'request_orgbtn' in request.POST:
             print(request.user.id)
-            req = Requests.objects.filter(
+            req = Request.objects.filter(
                 user=request.user, requestType="Promote to Organizer")
             if req:
                 messages.info(
                     request, "You have already requested to become an organizer.")
-                return redirect('app:user')
-            reqOrg = Requests.objects.create(
+                return redirect('account:myaccount')
+            reqOrg = Request.objects.create(
                 user=request.user, requestType="Promote to Organizer")
 
             messages.info(
-                request, "You have requested to become an organizer, you will be redicted to an organizer page once you are a organizer.")
+                request, "Request sent, once organizer, you will be redirected to the organizer page")
         elif 'submitUpvote' in request.POST:
             myeventid = request.POST.get('myevent-id')
             event = Event.objects.get(id=myeventid)
@@ -163,22 +164,23 @@ class HomePage(View):
         return redirect('account:myaccount')
 
 
+#! Admin Page
 @method_decorator(login_required, name='dispatch')
 class AdminPage(View):
     def get(self, request):
         if request.user.is_authenticated:
             currentUser = request.user
             if currentUser.is_superuser:
-                req = Requests.objects.filter(
+                requests = Request.objects.filter(
                     requestType="Promote to  Organizer", status="Reviewing")
                 events = Event.objects.all()
                 users = User.objects.all()
                 organizers = Organizer.objects.all()
                 context = {
-                    'requests': req,
-                    'events': events,
                     'users': users,
+                    'events': events,
                     'organizers': organizers,
+                    'requests': requests,
                 }
                 return render(request, 'adminAccount.html', context)
             elif not currentUser.is_staff:
@@ -194,10 +196,10 @@ class AdminPage(View):
         if 'requestorg_acceptbtn' in request.POST:
             userid = request.POST.get("user-id")
             requestid = request.POST.get("request-id")
-            req = Requests.objects.get(id=requestid)
+            req = Request.objects.get(id=requestid)
             organizer = Organizer.objects.create(organizer_id=userid)
             req.status = "Accept"
-            req.datetime_reply = datetime.datetime.now()
+            req.date_replied = datetime.datetime.now()
             req.replied_by = request.user
             user = req.user
             user.is_staff = True
@@ -205,23 +207,13 @@ class AdminPage(View):
             req.save()
             user.save()
         if 'requestorg_declinebtn' in request.POST:
-            print("Denied request to be an Organizer")
-            req = Requests.objects.get(id=request.POST.get("request-id"))
+            print("Request to be an organizer, DECLINED")
+            req = Request.objects.get(id=request.POST.get("request-id"))
             req.status = "Decline"
             req.date_replied = datetime.datetime.now()
             req.replied_by = request.user
             req.save()
         return redirect('account:administrator')
-    # def get(self, request):
-    #     if request.method == 'GET':
-    #         if request.user.is_superuser:
-    #             return render(request, 'adminAccount.html')
-    #         elif request.user.is_staff:
-    #             return redirect('account:organizer')
-    #         elif not request.user.is_staff:
-    #             return redirect('account:myaccount')
-    #         else:
-    #             return HttpResponse("Error")
 
 
 #! ORGANIZER PAGE
@@ -256,7 +248,7 @@ class OrganizerPage(View):
 
         if 'acceptRequestbtn' in request.POST:
             event = Event.objects.get(id=request.POST.get("event_id"))
-            req = Requests.objects.get(id=request.POST.get("request_id"))
+            req = Request.objects.get(id=request.POST.get("request_id"))
             user = User.objects.get(id=request.POST.get("user_id"))
             event.participants.add(user)
             req.replied_by = organizer
@@ -264,7 +256,7 @@ class OrganizerPage(View):
             req.status = "Accepted"
             req.save()
         if 'denyRequestbtn' in request.POST:
-            req = Requests.objects.get(id=request.POST.get("request-id"))
+            req = Request.objects.get(id=request.POST.get("request-id"))
             req.replied_by = organizer
             req.date_replied = datetime.datetime.now()
             req.status = "Decline"
@@ -275,10 +267,12 @@ class OrganizerPage(View):
 #! ADD EVENT PAGE
 class AddEvent(View):
     def get(self, request):
-        if request.user.is_superuser or request.user.is_staff:
-            return render(request, 'addEvent.html')
-        else:
-            return HttpResponse("Error")
+        if request.user.is_authenticated:
+            if request.user.is_superuser or request.user.is_staff:
+                return render(request, 'addEvent.html')
+            else:
+                return HttpResponse("Error")
+        return redirect('account:login')
 
     def post(self, request):
         organizer = Organizer.objects.get(organizer_id=request.user)
@@ -300,15 +294,3 @@ class AddEvent(View):
             return redirect('account:organizer')
         else:
             return redirect('account:login')
-
-
-# def homePage(request):
-#     if request.method == 'GET':
-#         if request.user.is_superuser:
-#             return redirect('account:administrator')
-#         elif request.user.is_staff:
-#             return redirect('account:organizer')
-#         elif not request.user.is_staff:
-#             return render(request, 'useraccount.html')
-#         else:
-#             return HttpResponse("Error")

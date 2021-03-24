@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="eng">
 
@@ -55,7 +56,7 @@
       font-size: 15px;
     }
 
-    .login_btn {
+    .register_btn {
       width: 100%;
       background: #53354a !important;
       color: white !important;
@@ -66,12 +67,12 @@
       font-size: 15px;
     }
 
-    .login_btn:focus {
+    .register_btn:focus {
       box-shadow: none !important;
       outline: 0px !important;
     }
 
-    .login_container {
+    .reegister_container {
       padding: 0 2rem;
     }
 
@@ -92,6 +93,7 @@
 </head>
 
 <body>
+  {% block content %}
   <div class="container h-100">
     <div class="d-flex justify-content-center h-100">
       <div class="user_card">
@@ -118,7 +120,7 @@
             </div>
 
             <div class="d-flex justify-content-center mt-3 login_container">
-              <input class="btn login_btn" type="submit" value="Register Account">
+              <button class="btn register_btn" type="submit">Register Account</button>
             </div>
 
           </form>
@@ -152,6 +154,8 @@
       form_fields[field].className += ' form-control'
     }
   </script>
+  {% endblock %}
 </body>
+
 
 </html>

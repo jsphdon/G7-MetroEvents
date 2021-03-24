@@ -118,7 +118,7 @@
 
   </nav>
   <div class="usertxt">
-    <h2>User Dashboard</h2>
+    <h2><b>User Dashboard</b></h2>
   </div>
   <!-- Table Events-->
 
@@ -184,15 +184,43 @@
           </table>
         </div>
       </div>
-      <div class="btn-center">
-        {% if not user.is_staff%}
-        <button type="submit" class="btn btn-primary" id="request_orgbtn" name="request_orgbtn" data-bs-toggle="modal"
-          data-bs-target="#ModalOrgRequest">Request to be an
-          Organizer</button>
-        {% endif %}
-        <div>{% for message in messages %} {{message}} {% endfor %}</div>
-      </div>
+      <div id="becomeAnOrganizer">
+        <div align="center">
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ModalRequestToBeOrganizer">
+            Request To Become Organizer
+          </button>
 
+          <div class="modal fade" id="ModalRequestToBeOrganizer" tabindex="-1" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header text-center">
+                  <h5 class="modal-title">Request To Become Organizer</h5>
+                </div>
+                <form method="post">
+                  {% csrf_token %}
+                  <div class="modal-body">
+                    <div class="text-start">
+                      Do you want to become an event organizer?
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="submit" name="request_orgbtn" class="btn btn-primary">
+                      Confirm
+                    </button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                      Cancel
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% for message in messages %}
+      <p id="messages">{{message}}</p>
+      {% endfor %}
     </div>
 
     <!-- Table My Events-->
@@ -205,19 +233,113 @@
               <tr>
                 <th id="eventjoined-col1" style="text-align: center">ID</th>
                 <th id="eventjoined-col2" style="text-align: center">Event Joined</th>
-                <th id="eventjoined-col3" style="text-align: center">Organizer</th>
-                <th id="eventjoined-col4" style="text-align: center">Actions</th>
+                <th id="eventjoined-col3" style="text-align: center">Start Date</th>
+                <th id="eventjoined-col3" style="text-align: center">End Date</th>
+                <th id="eventjoined-col5" style="text-align: center">Actions</th>
               </tr>
             </thead>
             <tbody>
+              {% for myevent in myEvents %}
               <tr>
-                <td style="text-align: center"></td>
-                <td style="text-align: center"></td>
-                <td style="text-align: center"></td>
+                <td style="text-align: center">{{myevent.id}}</td>
+                <td style="text-align: center">{{myevent.event_type}}</td>
+                <td style="text-align: center">{{myevent.start_date}}</td>
+                <td style="text-align: center">{{myevent.end_date}}</td>
                 <td style="text-align: center">
-                  <input class="btn btn-danger" type="button" id="remove_eventbtn" value="REMOVE EVENT">
+                  <button type="submit" class="btn btn-primary" data-bs-toggle="modal"
+                    data-bs-target="#ModalUpvote-{{myevent.id}}">
+                    Upvote
+                  </button>
+                  <div class="modal fade" id="ModalUpvote-{{myevent.id}}">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title">Give Upvote</h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form method="post">
+                          {% csrf_token %}
+                          <div class="modal-body">
+                            <div class="text-start">
+                              <div class="text-center">
+                                Give upvote or rating to the event you
+                                participated.
+                              </div>
+                              <div>
+                                <input type="text" value="{{myevent.id}}" name="myevent-id" hidden />
+                              </div>
+                              <div class="d-flex justify-content-evenly mt-3">
+                                <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+                                  <input type="radio" class="btn-check" name="btnradio" id="btnradio1"
+                                    autocomplete="off" checked value="upvote" />
+                                  <label class="btn btn-outline-primary" for="btnradio1">Upvote</label>
+
+                                  <input type="radio" class="btn-check" name="btnradio" id="btnradio3"
+                                    autocomplete="off" value="downvote" />
+                                  <label class="btn btn-outline-primary" for="btnradio3">Downvote</label>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="modal-footer">
+                            <button type="submit" name="submitUpvote" class="btn btn-primary">
+                              Submit
+                            </button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                              Cancel
+                            </button>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+
+                  <button type="submit" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ModalComment">
+                    Comment
+                  </button>
+
+                  <div class="modal fade" id="ModalComment" tabindex="-1" aria-labelledby="exampleModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title">Give Comment</h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form method="post">
+                          {% csrf_token %}
+                          <div class="modal-body">
+                            <div class="text-center mb-3">
+                              Give us some of your thoughts about the event that you joined <br />
+                              <div>
+                                <input type="text" value="{{myevent.id}}" name="myevent-id" hidden />
+                              </div>
+                            </div>
+                            <div>
+                              <textarea class="w-75" name="comments" placeholder="Type here..." style="
+                                  font-family: sans-serif;
+                                  font-size: 1em;
+                                  height: 150px;
+                                " required></textarea>
+                            </div>
+                          </div>
+
+                          <div class="modal-footer">
+                            <button type="submit" name="submitComment" class="btn btn-primary">
+                              Submit
+                            </button>
+                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
+                              Cancel
+                            </button>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
                 </td>
               </tr>
+              {% endfor %}
             </tbody>
           </table>
         </div>

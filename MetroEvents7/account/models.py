@@ -1,17 +1,9 @@
 from django.db import models
 from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import User
+from django.contrib.auth.admin import UserAdmin
 # Create your models here.
-
-
-class User(models.Model):
-    name = models.CharField(max_length=200, null=True)
-    phone = models.CharField(max_length=200, null=True)
-    email = models.CharField(max_length=200, null=True)
-    date_created = models.DateTimeField(auto_now_add=True, null=True)
-
-    def __str__(self):
-        return self.name
 
 
 class Comment(models.Model):
@@ -34,26 +26,7 @@ class Event(models.Model):
         return self.event_type
 
 
-class Organizer(models.Model):
-    organizer = models.OneToOneField(
-        User, on_delete=models.CASCADE, primary_key=True, default=0)
-    event = models.ManyToManyField(Event, blank=True)
-    promotion_date = models.DateField(auto_now_add=True, blank=True)
-
-    def __str__(self):
-        return self.organizer_id.username
-
-
-class Administrator(models.Model):
-    admin = models.OneToOneField(
-        User, on_delete=models.CASCADE, primary_key=True, default=0)
-    event = models.ManyToManyField(Event, blank=True)
-
-    def __str__(self):
-        return self.admin_id.username
-
-
-class Requests(models.Model):
+class Request(models.Model):
     REQUEST_TYPE = (
         ('Join Event', 'Join Event'),
         ('Promote to Organizer', 'Promote to Organizer'),
@@ -81,3 +54,22 @@ class Requests(models.Model):
 
     def __str__(self):
         return self.requestType + " - " + str(self.id)
+
+
+class Organizer(models.Model):
+    organizer = models.OneToOneField(
+        User, on_delete=models.CASCADE, primary_key=True, default=0)
+    event = models.ManyToManyField(Event, blank=True)
+    promotion_date = models.DateField(auto_now_add=True, blank=True)
+
+    def __str__(self):
+        return self.organizer_id.username
+
+
+class Administrator(models.Model):
+    admin = models.OneToOneField(
+        User, on_delete=models.CASCADE, primary_key=True, default=0)
+    event = models.ManyToManyField(Event, blank=True)
+
+    def __str__(self):
+        return self.admin_id.username
