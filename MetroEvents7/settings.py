@@ -77,10 +77,10 @@ WSGI_APPLICATION = 'MetroEvents7.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'db_MetroEvents7',
-        'USER': 'g7_admin@g7-metroevents',
+        'NAME': 'db_G7MetroEvents',
+        'USER': 'g7_admin@g7metroevents',
         'PASSWORD': 'Metroevents.7',
-        'HOST': 'g7-metroevents.mysql.database.azure.com',
+        'HOST': 'g7metroevents.mysql.database.azure.com',
         'PORT': '3306'
     }
 }
