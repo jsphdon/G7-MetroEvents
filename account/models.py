@@ -65,10 +65,10 @@ class Organizer(models.Model):
         return self.organizer_id.username
 
 
-class Administrator(models.Model):
-    admin = models.OneToOneField(
-        User, on_delete=models.CASCADE, primary_key=True, default=0)
-    event = models.ManyToManyField(Event, blank=True)
+# class Administrator(models.Model):
+#     admin = models.OneToOneField(
+#         User, on_delete=models.CASCADE, primary_key=True, default=0)
+#     event = models.ManyToManyField(Event, blank=True)
 
-    def __str__(self):
-        return self.admin_id.username
+#     def __str__(self):
+#         return self.admin_id.username

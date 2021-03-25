@@ -130,7 +130,7 @@
           <table class="table table-bordered">
             <thead>
               <tr>
-                <th id="event-col1" style="text-align: center">ID</th>
+                <th id="event-col1" style="text-align: center">Event ID</th>
                 <th id="event-col2" style="text-align: center">Event Type</th>
                 <th id="event-col3" style="text-align: center">Start Date</th>
                 <th id="event-col4" style="text-align: center">End Date</th>
@@ -147,11 +147,11 @@
                 <td style="text-align: center">
 
                   <button name="joinbtn" type="submit" class="btn btn-primary" data-toggle="modal"
-                    data-target="#modalJoinEvent">
+                    data-target="#modalJoinEvent-{{event.id}}">
                     JOIN EVENT
                   </button>
-                  <div class="modal fade" id="modalJoinEvent" tabindex="-1" aria-labelledby="exampleModalLabel"
-                    aria-hidden="true">
+                  <div class="modal fade" id="modalJoinEvent-{{event.id}}" tabindex="-1"
+                    aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
                       <div class="modal-content">
 
@@ -160,6 +160,7 @@
                           <div class="modal-body">
                             <div class="text-start">
                               <b>Are you sure you want to join this event?<b>
+
                             </div>
                           </div>
                           <div class="modal-footer justify-content-center">

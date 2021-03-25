@@ -16,7 +16,7 @@ from django.contrib.auth.decorators import login_required
 # from django.utils.decorators import method_decorator
 
 from .forms import CreateUserForm
-from .models import User, Comment, Event, Organizer, Request, Administrator
+from .models import User, Comment, Event, Organizer, Request
 
 
 def format_date(objects):
@@ -101,13 +101,14 @@ def logoutUser(request):
 class HomePage(View):
     def get(self, request):
         if request.user.is_authenticated:
-            if request.user.is_superuser:
+            currentUser = request.user
+            if currentUser.is_superuser:
                 return redirect('account:administrator')
-            elif request.user.is_staff:
+            elif currentUser.is_staff:
                 return redirect('account:organizer')
             elif not request.user.is_staff:
-                myEvents = Event.objects.filter(participants=request.user)
-                events = Event.objects.exclude(participants=request.user)
+                myEvents = Event.objects.filter(participants=currentUser)
+                events = Event.objects.exclude(participants=currentUser)
                 context = {
                     'myEvents': myEvents,
                     'events': events,
@@ -118,15 +119,17 @@ class HomePage(View):
 
     def post(self, request):
         if 'request_joinbtn' in request.POST:
+            currentUser = request.user
             eventid = request.POST.get('event_id')
+            print(eventid)
             req = Request.objects.filter(status="Accept",
-                                         user=request.user, requestType="Join Event", event_id=eventid)
+                                         user=currentUser, requestType="Join Event", event_id=eventid)
             if req:
                 messages.info(
                     request, "You have already requested to join the event.")
                 return redirect('account:myaccount')
             reqJoin = Request.objects.create(
-                user=request.user, requestType="Join Event", event_id=eventid)
+                user=currentUser, requestType="Join Event", event_id=eventid)
 
             messages.info(
                 request, "Your request to join the event will be up for reviewing")
