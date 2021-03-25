@@ -145,38 +145,37 @@
                 <td style="text-align: center">{{event.start_date}}</td>
                 <td style="text-align: center">{{event.end_date}}</td>
                 <td style="text-align: center">
-                  <form method="POST" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    <input type="number" name="event-id" value="{{event.id}}" hidden />
-                    <button name="request_joinbtn" type="submit" class="btn btn-primary" data-toggle="modal"
-                      data-target="#modalJoinEvent">
-                      JOIN EVENT
-                    </button>
-                    <div class="modal fade" id="modalJoinEvent" tabindex="-1" aria-labelledby="exampleModalLabel"
-                      aria-hidden="true">
-                      <div class="modal-dialog">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                          </div>
-                          <form method="post">
-                            {% csrf_token %}
-                            <div class="modal-body">
-                              <div class="text-start">
-                                Join request sent.
-                              </div>
-                            </div>
-                            <div class="modal-footer">
-                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                                Ok
-                              </button>
 
+                  <button name="joinbtn" type="submit" class="btn btn-primary" data-toggle="modal"
+                    data-target="#modalJoinEvent">
+                    JOIN EVENT
+                  </button>
+                  <div class="modal fade" id="modalJoinEvent" tabindex="-1" aria-labelledby="exampleModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+
+                        <form method="post">
+                          {% csrf_token %}
+                          <div class="modal-body">
+                            <div class="text-start">
+                              <b>Are you sure you want to join this event?<b>
                             </div>
-                          </form>
-                        </div>
+                          </div>
+                          <div class="modal-footer justify-content-center">
+                            <input type="number" value="{{event.id}}" name="event_id" hidden readonly />
+                            <button type="submit" class="btn btn-primary" name="request_joinbtn">
+                              Yes
+                            </button>
+                            <button type="button" class="btn btn-no" data-dismiss="modal">
+                              No
+                            </button>
+                          </div>
+                        </form>
                       </div>
                     </div>
-                  </form>
+                  </div>
+
                 </td>
               </tr>
               {% endfor %}
@@ -194,7 +193,7 @@
             aria-hidden="true">
             <div class="modal-dialog">
               <div class="modal-content">
-                <div class="modal-header text-center">
+                <div class="modal-header justify-content-center">
                   <h5 class="modal-title">Request To Become Organizer</h5>
                 </div>
                 <form method="post">
@@ -204,7 +203,7 @@
                       Do you want to become an event organizer?
                     </div>
                   </div>
-                  <div class="modal-footer">
+                  <div class="modal-footer justify-content-center">
                     <button type="submit" name="request_orgbtn" class="btn btn-primary">
                       Confirm
                     </button>
@@ -218,8 +217,9 @@
           </div>
         </div>
       </div>
+      <br>
       {% for message in messages %}
-      <p id="messages">{{message}}</p>
+      <p id="messages" style="text-align: center;">{{message}}</p>
       {% endfor %}
     </div>
 
@@ -253,22 +253,23 @@
                   <div class="modal fade" id="ModalUpvote-{{myevent.id}}">
                     <div class="modal-dialog">
                       <div class="modal-content">
-                        <div class="modal-header">
+                        <div class="modal-header justify-content-center">
                           <h5 class="modal-title">Give Upvote</h5>
-                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
                         </div>
                         <form method="post">
                           {% csrf_token %}
                           <div class="modal-body">
                             <div class="text-start">
                               <div class="text-center">
-                                Give upvote or rating to the event you
+                                Give an upvote or downvote to the event that you've
                                 participated.
                               </div>
+                              <br>
                               <div>
                                 <input type="text" value="{{myevent.id}}" name="myevent-id" hidden />
                               </div>
-                              <div class="d-flex justify-content-evenly mt-3">
+                              <div class="d-flex justify-content-center">
                                 <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
                                   <input type="radio" class="btn-check" name="btnradio" id="btnradio1"
                                     autocomplete="off" checked value="upvote" />
@@ -282,7 +283,7 @@
                             </div>
                           </div>
 
-                          <div class="modal-footer">
+                          <div class="modal-footer justify-content-center">
                             <button type="submit" name="submitUpvote" class="btn btn-primary">
                               Submit
                             </button>
@@ -303,9 +304,8 @@
                     aria-hidden="true">
                     <div class="modal-dialog">
                       <div class="modal-content">
-                        <div class="modal-header">
+                        <div class="modal-header justify-content-center">
                           <h5 class="modal-title">Give Comment</h5>
-                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <form method="post">
                           {% csrf_token %}
@@ -325,11 +325,11 @@
                             </div>
                           </div>
 
-                          <div class="modal-footer">
+                          <div class="modal-footer justify-content-center">
                             <button type="submit" name="submitComment" class="btn btn-primary">
                               Submit
                             </button>
-                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">
                               Cancel
                             </button>
                           </div>

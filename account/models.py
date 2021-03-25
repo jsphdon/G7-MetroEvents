@@ -3,6 +3,7 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
+
 # Create your models here.
 
 
@@ -14,8 +15,9 @@ class Event(models.Model):
     event_type = models.CharField(max_length=200)
 
     participants = models.ManyToManyField(User, blank=True)
-    start_date = models.DateField()
-    end_date = models.DateField()
+    start_date = models.DateField(
+        default=timezone.now(), blank=True, null=True)
+    end_date = models.DateField(default=timezone.now(), blank=True, null=True)
 
     upvotes = models.IntegerField(default=0, blank=True, null=True)
     comment = models.ManyToManyField(Comment, blank=True)
@@ -27,8 +29,7 @@ class Event(models.Model):
 class Request(models.Model):
     REQUEST_TYPE = (
         ('Join Event', 'Join Event'),
-        ('Organizer Promotion', 'Organizer Promotion'),
-        ('Admin Promotion', 'Admin Promotion'),
+        ('Organizer Request', 'Organizer Request'),
     )
     REQUEST_STATUS = (
         ('Reviewing', 'Reviewing'),

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Event, Organizer, Administrator, Request
+from .models import Event, Organizer, Request, Administrator
 
 # Register your models here.
 
