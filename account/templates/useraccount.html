@@ -134,6 +134,8 @@
                 <th id="event-col2" style="text-align: center">Event Type</th>
                 <th id="event-col3" style="text-align: center">Start Date</th>
                 <th id="event-col4" style="text-align: center">End Date</th>
+                <th id="event-col4" style="text-align: center">Upvotes</th>
+                <th id="event-col4" style="text-align: center">Participants</th>
                 <th id="event-col5" style="text-align: center">Actions</th>
               </tr>
             </thead>
@@ -144,6 +146,8 @@
                 <td style="text-align: center">{{event.event_type}}</td>
                 <td style="text-align: center">{{event.start_date}}</td>
                 <td style="text-align: center">{{event.end_date}}</td>
+                <td style="text-align: center">{{event.upvotes}}</td>
+                <td style="text-align: center">{{event.participants.count}}</td>
                 <td style="text-align: center">
 
                   <button name="joinbtn" type="submit" class="btn btn-primary" data-toggle="modal"
