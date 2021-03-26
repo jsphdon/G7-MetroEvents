@@ -113,19 +113,6 @@
         <li class="nav-item active">
           <a class="nav-link" href="{% url 'account:organizer' %}"><b>MetroEvents</b></a>
         </li>
-        {% if user.is_authenticated %}
-        <li class="nav-item">
-          <a class="nav-link" aria-current="page" href="{% url 'account:myaccount' %}">User</a>
-        </li>
-        {% endif %} {% if user.is_superuser or user.is_staff %}
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'account:organizer' %}">Organizer</a>
-        </li>
-        {% endif %} {% if user.is_superuser %}
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'account:administrator' %}">Administrator</a>
-        </li>
-        {% endif %}
       </ul>
     </div>
 
@@ -197,15 +184,13 @@
                               <br>
                               <!-- Start Date and End Date-->
                               <div class="row text-center justify-content-center">
-                                <div class="col">
+                                <div class="col-lg-6">
                                   <label for="decription"><b>Start Date</b></label>
                                   <input id="start_date" type="date" name="start_date" value="{{myevent.start_date}} "
                                     style="
                                   text-align: center;" required>
                                 </div>
-                              </div>
-                              <div class="row text-center justify-content-center">
-                                <div class="col">
+                                <div class="col-lg-6">
                                   <label for="decription"><b>End Date</b></label>
                                   <input id="end_date" type="date" name="end_date" value="{{myevent.end_date}}" style="
                                   text-align: center;" required>
